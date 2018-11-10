@@ -9,9 +9,9 @@ import tornado.ioloop
 
 
 def text(obj, encoding='utf-8'):
-    if isinstance(obj, unicode):
+    if isinstance(obj, str):
         return obj.encode(encoding)
-    return obj
+    return obj.decode(encoding)
 
 
 def unicode_obj(obj, encoding='utf-8'):

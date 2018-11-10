@@ -4,7 +4,7 @@
 // Created on 2014-10-29 22:12:14
 
 var port, server, service,
-  wait_before_end = 1000,
+  wait_before_end = 500,
   system = require('system'),
   webpage = require('webpage');
 
@@ -42,6 +42,16 @@ if (system.args.length !== 2) {
     if (fetch.headers && fetch.headers['User-Agent']) {
       page.settings.userAgent = fetch.headers['User-Agent'];
     }
+    page.customHeaders = {
+            'authority': 'www.google.com',
+            'pragma': 'no-cache',
+            'cache-control': 'no-cache',
+            'upgrade-insecure-requests': '1',
+            'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'accept-encoding': 'gzip, deflate, br',
+            'accept-language': 'en-US,en;q=0.9'
+    };
     page.settings.loadImages = fetch.load_images ? true : false;
     page.settings.resourceTimeout = fetch.timeout ? fetch.timeout * 1000 : 120*1000;
     if (fetch.headers) {
@@ -155,7 +165,10 @@ if (system.args.length !== 2) {
       response.write(body);
       response.close();
       finished = true;
+      
       page.close();
+      page.clearMemoryCache();
+      page.release();
     }
 
     function _make_result(page) {
